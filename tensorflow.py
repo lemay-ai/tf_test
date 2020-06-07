@@ -36,21 +36,22 @@ dir = me.parent
 os.chdir(str(dir.resolve()))
 
 # Load training dataPath
-
-data=pd.read_csv("dataset.csv")
-Y = data[[['output1','output2']]]
-X = data[[['col1','col2','col3','col4']]]
+data=pd.read_csv("/content/gdrive/My Drive/gravity-ai/dataset.csv")
+Y = data[['output1', 'output2']]
+X = data[['col1','col2','col3','col4']]
 
 # Define model 
 model = tf.keras.Sequential()
-# Adds a densely-connected layer with 64 units to the model:
 model.add(layers.Dense(4, activation='relu'))
-# Add another:
 model.add(layers.Dense(8, activation='relu'))
-# Add an output layer with 10 output units:
 model.add(layers.Dense(2))
 
-# fit model to data 
+#compile model
+model.compile(optimizer=tf.keras.optimizers.Adam(0.01),
+              loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+
+# fit model to data e
 model.fit(X,Y)
 
 test_df = pd.read_csv(dataPath, encoding="utf-8")
