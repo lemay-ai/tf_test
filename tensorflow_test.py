@@ -54,11 +54,9 @@ model.compile(optimizer=tf.keras.optimizers.Adam(0.01),
 # fit model to data e
 model.fit(X,Y)
 
-test_df = pd.read_csv(dataPath, encoding="utf-8")
-
-x_test = create_model_features(test_df)
+x_test = data[['col1','col2','col3','col4']]
 predictions = model.predict(x_test)
-test_df['value'] = predictions
-
+test_df['output1'] = predictions[0]
+test_df['output2'] = predictions[1]
 test_df.to_csv(path_or_buf=outPath, index=False)
 print(test_df.to_csv(index=False))
