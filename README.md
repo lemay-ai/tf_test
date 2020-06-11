@@ -1,2 +1,2 @@
 # tf_test
-testing tensorflow
+Testing tensorflow by memorizing some numbers and then inference as a service later on.
