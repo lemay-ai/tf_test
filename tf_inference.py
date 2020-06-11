@@ -4,6 +4,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 import pandas as pd
 import numpy as np
+import sys
 import gravityai as grav
 
 # Load training dataPath
@@ -22,3 +23,4 @@ data['output2'] = np.ones(predictions.shape)-predictions
 data['output1']=data['output1'].astype(np.int)
 data['output2']=data['output2'].astype(np.int)
 data.to_csv(path_or_buf=grav.getOutputFile(), index=False)
+sys.exit(0)
