@@ -36,7 +36,7 @@ dir = me.parent
 os.chdir(str(dir.resolve()))
 
 # Load training dataPath
-data=pd.read_csv("/content/gdrive/My Drive/gravity-ai/dataset.csv")
+data=pd.read_csv(datafile)
 Y = data[['output1', 'output2']]
 X = data[['col1','col2','col3','col4']]
 
