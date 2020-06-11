@@ -3,6 +3,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 import pandas as pd
+import numpy as np
 import warnings,sys,os
 from pathlib import Path
 
@@ -37,26 +38,35 @@ os.chdir(str(dir.resolve()))
 
 # Load training dataPath
 data=pd.read_csv(datafile)
-Y = data[['output1', 'output2']]
-X = data[['col1','col2','col3','col4']]
-
+Y = np.array(data[['output1']])
+X = np.array(data[['col1','col2','col3','col4']])
+X=X/100
+print(X.shape,Y.shape)
 # Define model 
 model = tf.keras.Sequential()
 model.add(layers.Dense(4, activation='relu'))
-model.add(layers.Dense(8, activation='relu'))
-model.add(layers.Dense(2))
+
+model.add(layers.Dense(1024, activation='relu'))
+#model.add(layers.Dropout(0.5))
+#model.add(layers.Dense(30, activation='relu'))
+model.add(layers.Dense(1,activation='sigmoid'))
 
 #compile model
-model.compile(optimizer=tf.keras.optimizers.Adam(0.01),
-              loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
+model.compile(optimizer='adam',
+              loss='binary_crossentropy',
               metrics=['accuracy'])
 
-# fit model to data e
-model.fit(X,Y)
+# fit model to data
+model.fit(X,Y, epochs=5000,batch_size=100)
 
-x_test = data[['col1','col2','col3','col4']]
-predictions = model.predict(x_test)
-test_df['output1'] = predictions[0]
-test_df['output2'] = predictions[1]
-test_df.to_csv(path_or_buf=outPath, index=False)
-print(test_df.to_csv(index=False))
+x_test = np.array(data[['col1','col2','col3','col4']])
+x_test=x_test/100
+predictions = np.around(model.predict(x_test))
+print(predictions.shape)
+print(predictions)
+data['output1'] = predictions
+data['output2'] = np.ones(predictions.shape)-predictions
+data['output1']=data['output1'].astype(np.int)
+data['output2']=data['output2'].astype(np.int)
+data.to_csv(path_or_buf=outPath, index=False)
+#print(data)
